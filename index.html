@@ -2,427 +2,1156 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IRONFORGE | Transform Your Body</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        neon: '#00FF88',
-                        dark: '#0a0a0a',
-                        card: '#141414'
-                    },
-                    fontFamily: {
-                        display: ['Oswald', 'sans-serif'],
-                        body: ['Inter', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>IRON COACH | Workout Companion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * { scroll-behavior: smooth; }
-        body { background: #0a0a0a; }
-        .gradient-text {
-            background: linear-gradient(135deg, #00FF88, #00CCFF);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
-        .glow {
-            box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+        
+        :root {
+            --neon: #00FF88;
+            --neon-dim: #00CC6A;
+            --dark: #0a0a0a;
+            --card: #141414;
+            --card-hover: #1a1a1a;
+            --red: #FF4444;
+            --blue: #4488FF;
+            --yellow: #FFD700;
         }
-        .card-hover {
-            transition: all 0.3s ease;
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none;
         }
-        .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+        
+        /* App Container */
+        .app {
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
         }
-        .animate-float {
-            animation: float 3s ease-in-out infinite;
+        
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            max-width: 480px;
+            margin: 0 auto;
+            background: var(--dark);
+            padding: 16px 20px;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .hero-bg {
-            background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0a 70%);
+        
+        .logo {
+            font-family: 'Oswald', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 2px;
         }
+        
+        .logo span { color: var(--neon); }
+        
+        .day-badge {
+            background: var(--card);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .day-badge.active { background: var(--neon); color: var(--dark); }
+        
+        /* Main Content */
+        .main {
+            padding: 80px 16px 120px;
+        }
+        
+        /* Day Selector */
+        .day-selector {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 8px 4px;
+            margin-bottom: 20px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        
+        .day-selector::-webkit-scrollbar { display: none; }
+        
+        .day-btn {
+            flex-shrink: 0;
+            background: var(--card);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #888;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .day-btn.selected {
+            background: var(--neon);
+            color: var(--dark);
+            border-color: var(--neon);
+        }
+        
+        .day-btn.rest {
+            background: rgba(255,68,68,0.1);
+            border-color: rgba(255,68,68,0.3);
+            color: var(--red);
+        }
+        
+        /* Exercise Card */
+        .exercise-card {
+            background: var(--card);
+            border-radius: 24px;
+            padding: 24px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s;
+        }
+        
+        .exercise-card.current {
+            border-color: var(--neon);
+            box-shadow: 0 0 30px rgba(0,255,136,0.1);
+        }
+        
+        .exercise-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 16px;
+        }
+        
+        .exercise-number {
+            background: var(--neon);
+            color: var(--dark);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        
+        .exercise-tag {
+            font-size: 11px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .tag-chest { background: rgba(255,68,68,0.2); color: #FF6666; }
+        .tag-triceps { background: rgba(100,100,255,0.2); color: #8888FF; }
+        .tag-shoulders { background: rgba(255,187,0,0.2); color: #FFD700; }
+        .tag-biceps { background: rgba(0,200,100,0.2); color: #00CC88; }
+        .tag-back { background: rgba(0,150,255,0.2); color: #44AAFF; }
+        
+        .exercise-name {
+            font-family: 'Oswald', sans-serif;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .exercise-details {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .detail {
+            text-align: center;
+        }
+        
+        .detail-value {
+            font-family: 'Oswald', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--neon);
+        }
+        
+        .detail-label {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Sets Grid */
+        .sets-grid {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .set-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            border: 2px solid rgba(255,255,255,0.1);
+            background: var(--dark);
+            color: #666;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .set-btn.done {
+            background: var(--neon);
+            border-color: var(--neon);
+            color: var(--dark);
+        }
+        
+        .set-btn.current {
+            border-color: var(--neon);
+            color: var(--neon);
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(0,255,136,0.4); }
+            50% { box-shadow: 0 0 0 8px rgba(0,255,136,0); }
+        }
+        
+        /* Quick Note */
+        .quick-note {
+            background: var(--dark);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 16px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .note-chip {
+            padding: 8px 14px;
+            border-radius: 20px;
+            background: var(--card);
+            border: 1px solid rgba(255,255,255,0.1);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .note-chip:hover, .note-chip:active {
+            background: var(--neon);
+            color: var(--dark);
+        }
+        
+        /* BIG TIMER */
+        .timer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--dark);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+        
+        .timer-overlay.active { display: flex; }
+        
+        .timer-label {
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+        }
+        
+        .timer-display {
+            font-family: 'Oswald', sans-serif;
+            font-size: 140px;
+            font-weight: 700;
+            line-height: 1;
+            color: var(--neon);
+            text-shadow: 0 0 60px rgba(0,255,136,0.5);
+        }
+        
+        .timer-display.warning { color: var(--yellow); text-shadow: 0 0 60px rgba(255,215,0,0.5); }
+        .timer-display.danger { 
+            color: var(--red); 
+            text-shadow: 0 0 60px rgba(255,68,68,0.5);
+            animation: timerPulse 0.5s infinite;
+        }
+        
+        @keyframes timerPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .timer-controls {
+            margin-top: 40px;
+            display: flex;
+            gap: 16px;
+        }
+        
+        .timer-btn {
+            padding: 16px 32px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+        
+        .timer-btn.skip {
+            background: var(--card);
+            color: white;
+        }
+        
+        .timer-btn.stop {
+            background: var(--red);
+            color: white;
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            background: var(--card);
+            height: 6px;
+            border-radius: 3px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--neon);
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+        
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 480px;
+            margin: 0 auto;
+            background: var(--card);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding: 12px 20px;
+            padding-bottom: max(12px, env(safe-area-inset-bottom));
+            display: flex;
+            justify-content: space-around;
+            z-index: 100;
+        }
+        
+        .nav-btn {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.2s;
+        }
+        
+        .nav-btn.active { color: var(--neon); }
+        
+        .nav-icon {
+            font-size: 24px;
+            line-height: 1;
+        }
+        
+        /* Pages */
+        .page { display: none; }
+        .page.active { display: block; }
+        
+        /* Notes Page */
+        .notes-list {
+            margin-top: 16px;
+        }
+        
+        .note-item {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .note-date {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        .note-text {
+            color: #ddd;
+            font-size: 14px;
+        }
+        
+        .note-exercise {
+            color: var(--neon);
+            font-size: 12px;
+            margin-top: 8px;
+        }
+        
+        /* Stats Page */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+        
         .stat-card {
-            background: linear-gradient(135deg, #141414 0%, #1a1a1a 100%);
-            border: 1px solid #222;
+            background: var(--card);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
         }
-        .workout-card {
-            background: linear-gradient(135deg, #141414 0%, #1a1a1a 100%);
-            border: 1px solid #222;
+        
+        .stat-value {
+            font-family: 'Oswald', sans-serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--neon);
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+        
+        /* Start Workout */
+        .start-workout {
+            position: fixed;
+            bottom: 80px;
+            left: 16px;
+            right: 16px;
+            max-width: 448px;
+            margin: 0 auto;
+            background: var(--neon);
+            color: var(--dark);
+            border: none;
+            border-radius: 16px;
+            padding: 18px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            z-index: 99;
+            display: none;
+        }
+        
+        .start-workout.visible { display: block; }
+        
+        /* Exercise list for selector */
+        .exercise-list {
+            margin-top: 12px;
+        }
+        
+        .exercise-mini {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .exercise-mini.done {
+            opacity: 0.5;
+        }
+        
+        .exercise-mini-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .exercise-mini-sets {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        /* All done screen */
+        .all-done {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .all-done-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        
+        .all-done-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--neon);
+        }
+        
+        .all-done-sub {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        /* Navigation arrows */
+        .nav-arrows {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        
+        .nav-arrow {
+            flex: 1;
+            padding: 16px;
+            border-radius: 14px;
+            border: 2px solid rgba(255,255,255,0.1);
+            background: var(--dark);
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .nav-arrow:active {
+            background: var(--card);
+            border-color: var(--neon);
+        }
+        
+        .nav-arrow.disabled {
+            opacity: 0.3;
+            pointer-events: none;
         }
     </style>
 </head>
-<body class="font-body text-white overflow-x-hidden">
-
-    <!-- Navbar -->
-    <nav class="fixed top-0 w-full z-50 bg-dark/90 backdrop-blur-md border-b border-white/5">
-        <div class="max-w-7xl mx-auto px-6 py-4">
-            <div class="flex justify-between items-center">
-                <a href="#" class="font-display text-2xl font-bold tracking-wider">
-                    <span class="gradient-text">IRON</span>FORGE
-                </a>
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#programs" class="text-gray-400 hover:text-neon transition-colors">Programs</a>
-                    <a href="#workouts" class="text-gray-400 hover:text-neon transition-colors">Workouts</a>
-                    <a href="#calculator" class="text-gray-400 hover:text-neon transition-colors">Calculator</a>
-                    <a href="#pricing" class="text-gray-400 hover:text-neon transition-colors">Pricing</a>
-                </div>
-                <a href="#cta" class="bg-neon text-dark px-6 py-2 rounded font-semibold hover:brightness-110 transition-all">
-                    Start Now
-                </a>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-top">
+                <div class="logo"><span>⚡</span> IRON</div>
+                <div class="day-badge" id="headerDay">PON</div>
             </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero-bg min-h-screen flex items-center justify-center relative pt-20">
-        <div class="absolute inset-0 overflow-hidden">
-            <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-neon/5 rounded-full blur-3xl animate-float"></div>
-            <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl animate-float" style="animation-delay: 1.5s;"></div>
-        </div>
-        <div class="max-w-7xl mx-auto px-6 text-center relative z-10">
-            <p class="text-neon font-semibold tracking-widest mb-4 uppercase">Welcome to IronForge</p>
-            <h1 class="font-display text-5xl md:text-7xl lg:text-8xl font-bold mb-6 leading-tight">
-                FORGE YOUR<br>
-                <span class="gradient-text">LEGACY</span>
-            </h1>
-            <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-10">
-                Transform your body. Crush your limits. Join thousands who have already started their journey.
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#programs" class="bg-neon text-dark px-8 py-4 rounded font-bold text-lg hover:brightness-110 transition-all glow">
-                    Start Training
-                </a>
-                <a href="#workouts" class="border border-white/20 px-8 py-4 rounded font-semibold text-lg hover:bg-white/5 transition-all">
-                    View Workouts
-                </a>
-            </div>
-
-            <!-- Stats -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-20">
-                <div class="stat-card rounded-xl p-6 card-hover">
-                    <p class="font-display text-4xl font-bold gradient-text">50K+</p>
-                    <p class="text-gray-500 mt-1">Active Members</p>
-                </div>
-                <div class="stat-card rounded-xl p-6 card-hover">
-                    <p class="font-display text-4xl font-bold gradient-text">200+</p>
-                    <p class="text-gray-500 mt-1">Workout Videos</p>
-                </div>
-                <div class="stat-card rounded-xl p-6 card-hover">
-                    <p class="font-display text-4xl font-bold gradient-text">50+</p>
-                    <p class="text-gray-500 mt-1">Training Programs</p>
-                </div>
-                <div class="stat-card rounded-xl p-6 card-hover">
-                    <p class="font-display text-4xl font-bold gradient-text">4.9</p>
-                    <p class="text-gray-500 mt-1">User Rating</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Programs Section -->
-    <section id="programs" class="py-24 bg-dark">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-16">
-                <p class="text-neon font-semibold tracking-widest mb-2 uppercase">Our Programs</p>
-                <h2 class="font-display text-4xl md:text-5xl font-bold">CHOOSE YOUR PATH</h2>
-            </div>
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Program 1 -->
-                <div class="workout-card rounded-2xl p-8 card-hover">
-                    <div class="w-16 h-16 bg-neon/10 rounded-xl flex items-center justify-center mb-6">
-                        <svg class="w-8 h-8 text-neon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                        </svg>
-                    </div>
-                    <h3 class="font-display text-2xl font-bold mb-3">Power Building</h3>
-                    <p class="text-gray-400 mb-6">Build raw strength and muscle mass with progressive overload techniques.</p>
-                    <ul class="space-y-2 text-gray-400 mb-6">
-                        <li class="flex items-center"><span class="text-neon mr-2">✓</span> 5x5 Stronglifts</li>
-                        <li class="flex items-center"><span class="text-neon mr-2">✓</span> Progressive overload</li>
-                        <li class="flex items-center"><span class="text-neon mr-2">✓</span> Nutrition guide</li>
-                    </ul>
-                    <a href="#" class="text-neon font-semibold hover:underline">Learn More →</a>
-                </div>
-                <!-- Program 2 -->
-                <div class="workout-card rounded-2xl p-8 card-hover border-neon/30">
-                    <div class="w-16 h-16 bg-neon/10 rounded-xl flex items-center justify-center mb-6">
-                        <svg class="w-8 h-8 text-neon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                        </svg>
-                    </div>
-                    <h3 class="font-display text-2xl font-bold mb-3">Fat Burn & Tone</h3>
-                    <p class="text-gray-400 mb-6">Shred fat and get defined with cardio and conditioning workouts.</p>
-                    <ul class="space-y-2 text-gray-400 mb-6">
-                        <li class="flex items-center"><span class="text-neon mr-2">✓</span> HIIT workouts</li>
-                        <li class="flex items-center"><span class="text-neon mr-2">✓</span> Metabolic training</li>
-                        <li class="flex items-center"><span class="text-neon mr-2">✓</span> Meal plans</li>
-                    </ul>
-                    <a href="#" class="text-neon font-semibold hover:underline">Learn More →</a>
-                </div>
-                <!-- Program 3 -->
-                <div class="workout-card rounded-2xl p-8 card-hover">
-                    <div class="w-16 h-16 bg-neon/10 rounded-xl flex items-center justify-center mb-6">
-                        <svg class="w-8 h-8 text-neon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                        </svg>
-                    </div>
-                    <h3 class="font-display text-2xl font-bold mb-3">Functional Fitness</h3>
-                    <p class="text-gray-400 mb-6">Build a body that moves well and performs in real life situations.</p>
-                    <ul class="space-y-2 text-gray-400 mb-6">
-                        <li class="flex items-center"><span class="text-neon mr-2">✓</span> Mobility work</li>
-                        <li class="flex items-center"><span class="text-neon mr-2">✓</span> Compound movements</li>
-                        <li class="flex items-center"><span class="text-neon mr-2">✓</span> Injury prevention</li>
-                    </ul>
-                    <a href="#" class="text-neon font-semibold hover:underline">Learn More →</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Workouts Section -->
-    <section id="workouts" class="py-24 bg-gradient-to-b from-dark to-card">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-16">
-                <p class="text-neon font-semibold tracking-widest mb-2 uppercase">Weekly Workouts</p>
-                <h2 class="font-display text-4xl md:text-5xl font-bold">PUSH YOUR LIMITS</h2>
-            </div>
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Monday -->
-                <div class="workout-card rounded-xl p-6 card-hover">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-neon font-bold">MON</span>
-                        <span class="text-xs bg-red-500/20 text-red-400 px-2 py-1 rounded">Chest & Triceps</span>
-                    </div>
-                    <h4 class="font-display text-xl font-bold mb-2">Upper Body</h4>
-                    <ul class="text-gray-400 text-sm space-y-1">
-                        <li>• Bench Press 4x6</li>
-                        <li>• Incline DB Press 3x10</li>
-                        <li>• Flyes 3x12</li>
-                        <li>• Triceps Dips 3xMAX</li>
-                    </ul>
-                </div>
-                <!-- Wednesday -->
-                <div class="workout-card rounded-xl p-6 card-hover">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-neon font-bold">WED</span>
-                        <span class="text-xs bg-blue-500/20 text-blue-400 px-2 py-1 rounded">Shoulders & Biceps</span>
-                    </div>
-                    <h4 class="font-display text-xl font-bold mb-2">Arm Day</h4>
-                    <ul class="text-gray-400 text-sm space-y-1">
-                        <li>• Military Press 4x8</li>
-                        <li>• Lateral Raises 3x12</li>
-                        <li>• Bicep Curls 3x10</li>
-                        <li>• Hammer Curls 3x10</li>
-                    </ul>
-                </div>
-                <!-- Friday -->
-                <div class="workout-card rounded-xl p-6 card-hover">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-neon font-bold">FRI</span>
-                        <span class="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded">Back & Biceps</span>
-                    </div>
-                    <h4 class="font-display text-xl font-bold mb-2">Pull Day</h4>
-                    <ul class="text-gray-400 text-sm space-y-1">
-                        <li>• Pull-ups 4xMAX</li>
-                        <li>• Chin-ups 3xMAX</li>
-                        <li>• Skull Crushers 3x10</li>
-                        <li>• Triceps Pushdowns 3x12</li>
-                    </ul>
-                </div>
-                <!-- Sunday -->
-                <div class="workout-card rounded-xl p-6 card-hover">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-neon font-bold">SUN</span>
-                        <span class="text-xs bg-orange-500/20 text-orange-400 px-2 py-1 rounded">Chest Day 2</span>
-                    </div>
-                    <h4 class="font-display text-xl font-bold mb-2">Bench Special</h4>
-                    <ul class="text-gray-400 text-sm space-y-1">
-                        <li>• Bench Press 4x6 (+2.5kg)</li>
-                        <li>• Dumbbell Fly 3x10</li>
-                        <li>• Incline Fly 3x10</li>
-                        <li>• Push-ups 3xMAX</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- BMI Calculator -->
-    <section id="calculator" class="py-24 bg-card">
-        <div class="max-w-3xl mx-auto px-6">
-            <div class="text-center mb-12">
-                <p class="text-neon font-semibold tracking-widest mb-2 uppercase">Body Metrics</p>
-                <h2 class="font-display text-4xl md:text-5xl font-bold">BMI CALCULATOR</h2>
-            </div>
-            <div class="workout-card rounded-2xl p-8">
-                <div class="grid md:grid-cols-2 gap-6 mb-6">
-                    <div>
-                        <label class="block text-gray-400 mb-2">Height (cm)</label>
-                        <input type="number" id="height" placeholder="180" class="w-full bg-dark border border-white/10 rounded-lg px-4 py-3 text-white focus:border-neon focus:outline-none transition-colors">
-                    </div>
-                    <div>
-                        <label class="block text-gray-400 mb-2">Weight (kg)</label>
-                        <input type="number" id="weight" placeholder="80" class="w-full bg-dark border border-white/10 rounded-lg px-4 py-3 text-white focus:border-neon focus:outline-none transition-colors">
-                    </div>
-                </div>
-                <button onclick="calculateBMI()" class="w-full bg-neon text-dark font-bold py-4 rounded-lg hover:brightness-110 transition-all">
-                    Calculate BMI
-                </button>
-                <div id="bmiResult" class="mt-6 text-center hidden">
-                    <p class="text-gray-400 mb-2">Your BMI</p>
-                    <p class="font-display text-6xl font-bold gradient-text" id="bmiValue">0</p>
-                    <p class="text-gray-400 mt-2" id="bmiCategory">-</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Pricing Section -->
-    <section id="pricing" class="py-24 bg-dark">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-16">
-                <p class="text-neon font-semibold tracking-widest mb-2 uppercase">Membership</p>
-                <h2 class="font-display text-4xl md:text-5xl font-bold">INVEST IN YOURSELF</h2>
-            </div>
-            <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                <!-- Free -->
-                <div class="workout-card rounded-2xl p-8 card-hover">
-                    <h3 class="font-display text-2xl font-bold mb-2">Free</h3>
-                    <p class="text-gray-400 mb-6">Perfect for beginners</p>
-                    <p class="font-display text-5xl font-bold mb-6">€0<span class="text-lg text-gray-400 font-body">/mo</span></p>
-                    <ul class="space-y-3 text-gray-400 mb-8">
-                        <li class="flex items-center"><span class="text-neon mr-2">✓</span> Basic workout plans</li>
-                        <li class="flex items-center"><span class="text-neon mr-2">✓</span> Exercise database</li>
-                        <li class="flex items-center"><span class="text-neon mr-2">✓</span> BMI calculator</li>
-                        <li class="text-gray-600 flex items-center"><span class="mr-2">✗</span> Video tutorials</li>
-                        <li class="text-gray-600 flex items-center"><span class="mr-2">✗</span> Nutrition plans</li>
-                    </ul>
-                    <a href="#" class="block text-center border border-white/20 py-3 rounded font-semibold hover:bg-white/5 transition-all">
-                        Get Started
-                    </a>
-                </div>
-                <!-- Pro -->
-                <div class="workout-card rounded-2xl p-8 card-hover border-neon relative">
-                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-neon text-dark text-xs font-bold px-4 py-1 rounded">POPULAR</div>
-                    <h3 class="font-display text-2xl font-bold mb-2">Pro</h3>
-                    <p class="text-gray-400 mb-6">For serious athletes</p>
-                    <p class="font-display text-5xl font-bold mb-6">€19<span class="text-lg text-gray-400 font-body">/mo</span></p>
-                    <ul class="space-y-3 text-gray-400 mb-8">
-                        <li class="flex items-center"><span class="text-neon mr-2">✓</span> All Free features</li>
-                        <li class="flex items-center"><span class="text-neon mr-2">✓</span> Video tutorials</li>
-                        <li class="flex items-center"><span class="text-neon mr-2">✓</span> Custom nutrition plans</li>
-                        <li class="flex items-center"><span class="text-neon mr-2">✓</span> Progress tracking</li>
-                        <li class="flex items-center"><span class="text-neon mr-2">✓</span> Priority support</li>
-                    </ul>
-                    <a href="#" class="block text-center bg-neon text-dark py-3 rounded font-bold hover:brightness-110 transition-all">
-                        Start Free Trial
-                    </a>
-                </div>
-                <!-- Elite -->
-                <div class="workout-card rounded-2xl p-8 card-hover">
-                    <h3 class="font-display text-2xl font-bold mb-2">Elite</h3>
-                    <p class="text-gray-400 mb-6">Ultimate transformation</p>
-                    <p class="font-display text-5xl font-bold mb-6">€49<span class="text-lg text-gray-400 font-body">/mo</span></p>
-                    <ul class="space-y-3 text-gray-400 mb-8">
-                        <li class="flex items-center"><span class="text-neon mr-2">✓</span> All Pro features</li>
-                        <li class="flex items-center"><span class="text-neon mr-2">✓</span> 1-on-1 coaching calls</li>
-                        <li class="flex items-center"><span class="text-neon mr-2">✓</span> Custom program design</li>
-                        <li class="flex items-center"><span class="text-neon mr-2">✓</span> Supplement guidance</li>
-                        <li class="flex items-center"><span class="text-neon mr-2">✓</span> 24/7 support</li>
-                    </ul>
-                    <a href="#" class="block text-center border border-white/20 py-3 rounded font-semibold hover:bg-white/5 transition-all">
-                        Contact Us
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section id="cta" class="py-24 bg-gradient-to-b from-card to-dark relative overflow-hidden">
-        <div class="absolute inset-0 flex items-center justify-center">
-            <div class="w-[600px] h-[600px] bg-neon/5 rounded-full blur-3xl"></div>
-        </div>
-        <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
-            <h2 class="font-display text-4xl md:text-6xl font-bold mb-6">
-                READY TO <span class="gradient-text">TRANSFORM?</span>
-            </h2>
-            <p class="text-gray-400 text-lg mb-10 max-w-2xl mx-auto">
-                Join thousands of athletes who have already started their journey. Your body is waiting.
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#pricing" class="bg-neon text-dark px-10 py-4 rounded font-bold text-lg hover:brightness-110 transition-all glow">
-                    Get Started Free
-                </a>
-                <a href="#calculator" class="border border-white/20 px-10 py-4 rounded font-semibold text-lg hover:bg-white/5 transition-all">
-                    Calculate BMI
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="py-12 bg-dark border-t border-white/5">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-6 md:mb-0">
-                    <a href="#" class="font-display text-2xl font-bold tracking-wider">
-                        <span class="gradient-text">IRON</span>FORGE
-                    </a>
-                    <p class="text-gray-500 mt-2">© 2026 IronForge. All rights reserved.</p>
-                </div>
-                <div class="flex space-x-6">
-                    <a href="#" class="text-gray-400 hover:text-neon transition-colors">Instagram</a>
-                    <a href="#" class="text-gray-400 hover:text-neon transition-colors">YouTube</a>
-                    <a href="#" class="text-gray-400 hover:text-neon transition-colors">Twitter</a>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        function calculateBMI() {
-            const height = parseFloat(document.getElementById('height').value) / 100;
-            const weight = parseFloat(document.getElementById('weight').value);
+        </header>
+        
+        <!-- MAIN PAGE -->
+        <main class="main page active" id="page-main">
+            <!-- Day Selector -->
+            <div class="day-selector" id="daySelector"></div>
             
-            if (!height || !weight || height <= 0 || weight <= 0) {
-                alert('Please enter valid height and weight');
+            <!-- Current Exercise Card -->
+            <div class="exercise-card current" id="currentCard">
+                <div class="exercise-header">
+                    <div class="exercise-number" id="exerciseNum">1</div>
+                    <div class="exercise-tag tag-chest" id="exerciseTag">PRSA</div>
+                </div>
+                <div class="exercise-name" id="exerciseName">Bench Press</div>
+                <div class="exercise-details">
+                    <div class="detail">
+                        <div class="detail-value" id="exerciseWeight">65</div>
+                        <div class="detail-label">KG</div>
+                    </div>
+                    <div class="detail">
+                        <div class="detail-value" id="exerciseSets">4</div>
+                        <div class="detail-label">SERIJA</div>
+                    </div>
+                    <div class="detail">
+                        <div class="detail-value" id="exerciseReps">6</div>
+                        <div class="detail-label">REPS</div>
+                    </div>
+                </div>
+                <div class="sets-grid" id="setsGrid"></div>
+                <div class="quick-note" id="quickNote"></div>
+                <div class="nav-arrows">
+                    <button class="nav-arrow disabled" id="prevBtn" onclick="prevExercise()">← PRETHODNA</button>
+                    <button class="nav-arrow" id="nextBtn" onclick="nextExercise()">SLJEDEĆA →</button>
+                </div>
+            </div>
+            
+            <!-- Progress -->
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            
+            <!-- Exercise List -->
+            <div class="exercise-list" id="exerciseList"></div>
+        </main>
+        
+        <!-- NOTES PAGE -->
+        <main class="main page" id="page-notes">
+            <div style="font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 600; margin-bottom: 8px;">📝 BILJEŠKE</div>
+            <div style="color: #666; font-size: 13px;">Tvoje trening bilješke</div>
+            <div class="notes-list" id="notesList"></div>
+        </main>
+        
+        <!-- STATS PAGE -->
+        <main class="main page" id="page-stats">
+            <div style="font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 600; margin-bottom: 8px;">📊 STATISTIKA</div>
+            <div style="color: #666; font-size: 13px;">Ovaj tjedan</div>
+            <div class="stats-grid" id="statsGrid"></div>
+        </main>
+        
+        <!-- Timer Overlay -->
+        <div class="timer-overlay" id="timerOverlay">
+            <div class="timer-label">ODMOR</div>
+            <div class="timer-display" id="timerDisplay">90</div>
+            <div class="timer-controls">
+                <button class="timer-btn skip" onclick="skipTimer()">+30s</button>
+                <button class="timer-btn stop" onclick="stopTimer()">PRESKOČI</button>
+            </div>
+        </div>
+        
+        <!-- Start Workout Button -->
+        <button class="start-workout" id="startWorkoutBtn" onclick="startWorkout()">
+            ▶️ ZAPOČNI TRENING
+        </button>
+        
+        <!-- Bottom Nav -->
+        <nav class="bottom-nav">
+            <button class="nav-btn active" onclick="showPage('main')">
+                <span class="nav-icon">🏋️</span>
+                TRENING
+            </button>
+            <button class="nav-btn" onclick="showPage('notes')">
+                <span class="nav-icon">📝</span>
+                BILJEŠKE
+            </button>
+            <button class="nav-btn" onclick="showPage('stats')">
+                <span class="nav-icon">📊</span>
+                STATS
+            </button>
+        </nav>
+    </div>
+    
+    <script>
+        // ========== WORKOUT DATA ==========
+        const WEEK = {
+            pon: {
+                name: 'PON',
+                fullName: 'Ponedjeljak',
+                rest: false,
+                tag: 'Prsa + Triceps',
+                exercises: [
+                    { name: 'Bench Press', weight: 65, sets: 4, reps: 6, rest: 150, tag: 'chest', tagName: 'PRSA' },
+                    { name: 'Incline DB Press', weight: '12-16', sets: 3, reps: 10, rest: 120, tag: 'chest', tagName: 'PRSA' },
+                    { name: 'Fly (bučice)', weight: '8-12', sets: 3, reps: 12, rest: 90, tag: 'chest', tagName: 'PRSA' },
+                    { name: 'Triceps Dips', weight: 'BW', sets: 3, reps: 0, rest: 90, tag: 'triceps', tagName: 'TRICEPS' }
+                ]
+            },
+            uto: { name: 'UTO', fullName: 'Utorak', rest: true, exercises: [] },
+            sri: {
+                name: 'SRI',
+                fullName: 'Srijeda',
+                rest: false,
+                tag: 'Ramena + Biceps',
+                exercises: [
+                    { name: 'Military Press', weight: 12, sets: 4, reps: 8, rest: 90, tag: 'shoulders', tagName: 'RAMENA' },
+                    { name: 'Lateral Raises', weight: '4-6', sets: 3, reps: 12, rest: 60, tag: 'shoulders', tagName: 'RAMENA' },
+                    { name: 'Front Raises', weight: '4-6', sets: 2, reps: 12, rest: 60, tag: 'shoulders', tagName: 'RAMENA' },
+                    { name: 'Bicep Curls', weight: 8, sets: 3, reps: 10, rest: 60, tag: 'biceps', tagName: 'BICEPS' },
+                    { name: 'Hammer Curls', weight: 8, sets: 3, reps: 10, rest: 60, tag: 'biceps', tagName: 'BICEPS' }
+                ]
+            },
+            cet: { name: 'ČET', fullName: 'Četvrtak', rest: true, exercises: [] },
+            pet: {
+                name: 'PET',
+                fullName: 'Petak',
+                rest: false,
+                tag: 'Leđa + Biceps + Triceps',
+                exercises: [
+                    { name: 'Pull-ups / Zgibovi', weight: 'BW', sets: 4, reps: 0, rest: 120, tag: 'back', tagName: 'LEĐA' },
+                    { name: 'Chin-ups (supinirani)', weight: 'BW', sets: 3, reps: 0, rest: 90, tag: 'back', tagName: 'LEĐA' },
+                    { name: 'Skull Crushers', weight: '8-12', sets: 3, reps: 10, rest: 90, tag: 'triceps', tagName: 'TRICEPS' },
+                    { name: 'Triceps Pushdowns', weight: '8-12', sets: 3, reps: 12, rest: 60, tag: 'triceps', tagName: 'TRICEPS' },
+                    { name: 'Concentration Curls', weight: '4-6', sets: 2, reps: 12, rest: 60, tag: 'biceps', tagName: 'BICEPS' }
+                ]
+            },
+            sub: { name: 'SUB', fullName: 'Subota', rest: true, exercises: [] },
+            ned: {
+                name: 'NED',
+                fullName: 'Nedjelja',
+                rest: false,
+                tag: 'Prsa (Bench Dan #2)',
+                exercises: [
+                    { name: 'Bench Press', weight: 67.5, sets: 4, reps: 6, rest: 150, tag: 'chest', tagName: 'PRSA' },
+                    { name: 'Dumbbell Fly', weight: '10-14', sets: 3, reps: 10, rest: 90, tag: 'chest', tagName: 'PRSA' },
+                    { name: 'Incline Fly', weight: '8-12', sets: 3, reps: 10, rest: 90, tag: 'chest', tagName: 'PRSA' },
+                    { name: 'Push-ups', weight: 'BW', sets: 3, reps: 0, rest: 60, tag: 'chest', tagName: 'PRSA' }
+                ]
+            }
+        };
+        
+        const DAY_KEYS = ['pon', 'uto', 'sri', 'cet', 'pet', 'sub', 'ned'];
+        const QUICK_NOTES = ['Lako! 💪', 'Gut! 🔥', 'Tezko! 💀', 'Dobre vibracije ✨', 'Slab dan 😴'];
+        
+        // ========== STATE ==========
+        let currentDay = 'pon';
+        let currentExerciseIndex = 0;
+        let completedSets = {}; // { 'pon-0': [true, true, false, false], ... }
+        let notes = [];
+        let workoutActive = false;
+        let timerInterval = null;
+        let timerSeconds = 0;
+        
+        // ========== INIT ==========
+        function init() {
+            loadState();
+            renderDaySelector();
+            renderCurrentExercise();
+            renderExerciseList();
+            renderNotes();
+            renderStats();
+            updateStartButton();
+            
+            // Set today's day
+            const today = new Date().getDay();
+            const dayMap = { 1: 'pon', 2: 'uto', 3: 'sri', 4: 'cet', 5: 'pet', 6: 'sub', 0: 'ned' };
+            currentDay = dayMap[today];
+            renderDaySelector();
+            renderCurrentExercise();
+            renderExerciseList();
+            updateStartButton();
+        }
+        
+        // ========== STATE MANAGEMENT ==========
+        function loadState() {
+            try {
+                const saved = localStorage.getItem('ironcoach_state');
+                if (saved) {
+                    const state = JSON.parse(saved);
+                    completedSets = state.completedSets || {};
+                    notes = state.notes || [];
+                }
+            } catch(e) {}
+        }
+        
+        function saveState() {
+            try {
+                localStorage.setItem('ironcoach_state', JSON.stringify({
+                    completedSets,
+                    notes
+                }));
+            } catch(e) {}
+        }
+        
+        // ========== DAY SELECTOR ==========
+        function renderDaySelector() {
+            const container = document.getElementById('daySelector');
+            container.innerHTML = '';
+            
+            DAY_KEYS.forEach(key => {
+                const day = WEEK[key];
+                const btn = document.createElement('button');
+                btn.className = 'day-btn' + (key === currentDay ? ' selected' : '') + (day.rest ? ' rest' : '');
+                btn.textContent = day.name;
+                btn.onclick = () => selectDay(key);
+                container.appendChild(btn);
+            });
+            
+            document.getElementById('headerDay').textContent = WEEK[currentDay].name;
+        }
+        
+        function selectDay(key) {
+            currentDay = key;
+            currentExerciseIndex = 0;
+            workoutActive = false;
+            renderDaySelector();
+            renderCurrentExercise();
+            renderExerciseList();
+            updateStartButton();
+        }
+        
+        // ========== CURRENT EXERCISE ==========
+        function renderCurrentExercise() {
+            const day = WEEK[currentDay];
+            
+            if (day.rest || day.exercises.length === 0) {
+                document.getElementById('currentCard').innerHTML = `
+                    <div class="all-done">
+                        <div class="all-done-icon">😴</div>
+                        <div class="all-done-title">ODMOR DAN</div>
+                        <div class="all-done-sub">Ili nema vježbi za ovaj dan</div>
+                    </div>
+                `;
+                document.getElementById('progressFill').style.width = '0%';
                 return;
             }
             
-            const bmi = weight / (height * height);
-            const bmiValue = document.getElementById('bmiValue');
-            const bmiCategory = document.getElementById('bmiCategory');
-            const resultDiv = document.getElementById('bmiResult');
+            const ex = day.exercises[currentExerciseIndex];
+            const setsKey = `${currentDay}-${currentExerciseIndex}`;
+            const setsDone = completedSets[setsKey] || [];
             
-            bmiValue.textContent = bmi.toFixed(1);
+            document.getElementById('exerciseNum').textContent = currentExerciseIndex + 1;
+            document.getElementById('exerciseTag').textContent = ex.tagName;
+            document.getElementById('exerciseTag').className = `exercise-tag tag-${ex.tag}`;
+            document.getElementById('exerciseName').textContent = ex.name;
+            document.getElementById('exerciseWeight').textContent = ex.weight;
+            document.getElementById('exerciseSets').textContent = ex.sets;
+            document.getElementById('exerciseReps').textContent = ex.reps === 0 ? 'MAX' : ex.reps;
             
-            if (bmi < 18.5) {
-                bmiCategory.textContent = 'Underweight - Time to bulk up!';
-                bmiCategory.className = 'text-blue-400 mt-2';
-            } else if (bmi < 25) {
-                bmiCategory.textContent = 'Normal - Keep it up!';
-                bmiCategory.className = 'text-neon mt-2';
-            } else if (bmi < 30) {
-                bmiCategory.textContent = 'Overweight - Time to shred!';
-                bmiCategory.className = 'text-orange-400 mt-2';
-            } else {
-                bmiCategory.textContent = 'Obese - Let\'s get to work!';
-                bmiCategory.className = 'text-red-400 mt-2';
+            // Sets grid
+            const grid = document.getElementById('setsGrid');
+            grid.innerHTML = '';
+            for (let i = 0; i < ex.sets; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'set-btn';
+                if (setsDone[i]) {
+                    btn.classList.add('done');
+                    btn.textContent = '✓';
+                } else if (i === setsDone.length) {
+                    btn.classList.add('current');
+                    btn.textContent = i + 1;
+                } else {
+                    btn.textContent = i + 1;
+                }
+                btn.onclick = () => completeSet(i);
+                grid.appendChild(btn);
             }
             
-            resultDiv.classList.remove('hidden');
+            // Quick notes
+            const noteDiv = document.getElementById('quickNote');
+            noteDiv.innerHTML = '';
+            QUICK_NOTES.forEach(note => {
+                const chip = document.createElement('button');
+                chip.className = 'note-chip';
+                chip.textContent = note;
+                chip.onclick = () => addQuickNote(note, ex.name);
+                noteDiv.appendChild(chip);
+            });
+            
+            // Nav arrows
+            document.getElementById('prevBtn').classList.toggle('disabled', currentExerciseIndex === 0);
+            document.getElementById('nextBtn').classList.toggle('disabled', currentExerciseIndex === day.exercises.length - 1);
+            
+            // Progress
+            updateProgress();
         }
+        
+        function completeSet(setIndex) {
+            const day = WEEK[currentDay];
+            const ex = day.exercises[currentExerciseIndex];
+            const setsKey = `${currentDay}-${currentExerciseIndex}`;
+            
+            if (!completedSets[setsKey]) {
+                completedSets[setsKey] = [];
+            }
+            
+            if (!completedSets[setsKey][setIndex]) {
+                completedSets[setsKey][setIndex] = true;
+                saveState();
+                renderCurrentExercise();
+                renderExerciseList();
+                updateProgress();
+                updateStartButton();
+                
+                // Check if all sets done
+                if (completedSets[setsKey].filter(Boolean).length === ex.sets) {
+                    // Exercise complete - offer to move next
+                    if (currentExerciseIndex < day.exercises.length - 1) {
+                        setTimeout(() => {
+                            if (confirm('Vježba odrađena! Prelazimo na sljedeću?')) {
+                                nextExercise();
+                            }
+                        }, 300);
+                    }
+                }
+                
+                // Start rest timer
+                if (setIndex < ex.sets - 1) {
+                    startTimer(ex.rest);
+                }
+            }
+        }
+        
+        function prevExercise() {
+            if (currentExerciseIndex > 0) {
+                currentExerciseIndex--;
+                renderCurrentExercise();
+            }
+        }
+        
+        function nextExercise() {
+            const day = WEEK[currentDay];
+            if (currentExerciseIndex < day.exercises.length - 1) {
+                currentExerciseIndex++;
+                renderCurrentExercise();
+            }
+        }
+        
+        // ========== PROGRESS ==========
+        function updateProgress() {
+            const day = WEEK[currentDay];
+            if (day.rest || day.exercises.length === 0) {
+                document.getElementById('progressFill').style.width = '0%';
+                return;
+            }
+            
+            let totalSets = 0;
+            let doneSets = 0;
+            
+            day.exercises.forEach((ex, i) => {
+                totalSets += ex.sets;
+                const setsKey = `${currentDay}-${i}`;
+                if (completedSets[setsKey]) {
+                    doneSets += completedSets[setsKey].filter(Boolean).length;
+                }
+            });
+            
+            const pct = totalSets > 0 ? (doneSets / totalSets * 100) : 0;
+            document.getElementById('progressFill').style.width = pct + '%';
+        }
+        
+        // ========== EXERCISE LIST ==========
+        function renderExerciseList() {
+            const day = WEEK[currentDay];
+            const list = document.getElementById('exerciseList');
+            
+            if (day.rest || day.exercises.length === 0) {
+                list.innerHTML = '';
+                return;
+            }
+            
+            list.innerHTML = day.exercises.map((ex, i) => {
+                const setsKey = `${currentDay}-${i}`;
+                const done = completedSets[setsKey] ? completedSets[setsKey].filter(Boolean).length : 0;
+                const allDone = done === ex.sets;
+                
+                return `
+                    <div class="exercise-mini ${allDone ? 'done' : ''}" onclick="jumpToExercise(${i})">
+                        <div>
+                            <div class="exercise-mini-name">${ex.name}</div>
+                            <div class="exercise-mini-sets">${done}/${ex.sets} serija</div>
+                        </div>
+                        <div style="color: ${allDone ? 'var(--neon)' : '#666'}">${allDone ? '✓' : (done > 0 ? `${done}✓` : '○')}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function jumpToExercise(index) {
+            currentExerciseIndex = index;
+            renderCurrentExercise();
+        }
+        
+        // ========== TIMER ==========
+        function startTimer(seconds) {
+            timerSeconds = seconds;
+            document.getElementById('timerOverlay').classList.add('active');
+            updateTimerDisplay();
+            
+            if (timerInterval) clearInterval(timerInterval);
+            
+            timerInterval = setInterval(() => {
+                timerSeconds--;
+                updateTimerDisplay();
+                
+                if (timerSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('timerOverlay').classList.remove('active');
+                    // Vibrate if possible
+                    if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+                }
+            }, 1000);
+        }
+        
+        function updateTimerDisplay() {
+            const display = document.getElementById('timerDisplay');
+            display.textContent = Math.max(0, timerSeconds);
+            
+            display.classList.remove('warning', 'danger');
+            if (timerSeconds <= 10) {
+                display.classList.add('danger');
+            } else if (timerSeconds <= 30) {
+                display.classList.add('warning');
+            }
+        }
+        
+        function skipTimer() {
+            timerSeconds += 30;
+        }
+        
+        function stopTimer() {
+            clearInterval(timerInterval);
+            document.getElementById('timerOverlay').classList.remove('active');
+        }
+        
+        // ========== NOTES ==========
+        function addQuickNote(text, exerciseName) {
+            const note = {
+                date: new Date().toLocaleString('hr-HR'),
+                text: text,
+                exercise: exerciseName,
+                day: WEEK[currentDay].fullName
+            };
+            notes.unshift(note);
+            saveState();
+            renderNotes();
+        }
+        
+        function renderNotes() {
+            const list = document.getElementById('notesList');
+            
+            if (notes.length === 0) {
+                list.innerHTML = '<div style="color: #666; text-align: center; padding: 40px;">Još nema bilješki</div>';
+                return;
+            }
+            
+            list.innerHTML = notes.map(note => `
+                <div class="note-item">
+                    <div class="note-date">${note.day} • ${note.date}</div>
+                    <div class="note-text">${note.text}</div>
+                    <div class="note-exercise">${note.exercise}</div>
+                </div>
+            `).join('');
+        }
+        
+        // ========== STATS ==========
+        function renderStats() {
+            const grid = document.getElementById('statsGrid');
+            
+            // Calculate this week's stats
+            let totalWorkouts = 0;
+            let totalSets = 0;
+            let totalExercises = 0;
+            
+            DAY_KEYS.forEach(key => {
+                const day = WEEK[key];
+                if (!day.rest) {
+                    day.exercises.forEach((ex, i) => {
+                        const setsKey = `${key}-${i}`;
+                        if (completedSets[setsKey]) {
+                            const done = completedSets[setsKey].filter(Boolean).length;
+                            if (done > 0) {
+                                totalWorkouts++;
+                                totalSets += done;
+                                totalExercises++;
+                            }
+                        }
+                    });
+                }
+            });
+            
+            const todayKey = currentDay;
+            let todaySets = 0;
+            const day = WEEK[todayKey];
+            if (!day.rest) {
+                day.exercises.forEach((ex, i) => {
+                    const setsKey = `${todayKey}-${i}`;
+                    if (completedSets[setsKey]) {
+                        todaySets += completedSets[setsKey].filter(Boolean).length;
+                    }
+                });
+            }
+            
+            grid.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">${totalWorkouts}</div>
+                    <div class="stat-label">Treninga</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${totalSets}</div>
+                    <div class="stat-label">Serija</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${todaySets}</div>
+                    <div class="stat-label">Danas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${DAY_KEYS.filter(k => !WEEK[k].rest).length}</div>
+                    <div class="stat-label">Dana u tjednu</div>
+                </div>
+            `;
+        }
+        
+        // ========== NAVIGATION ==========
+        function showPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(`page-${page}`).classList.add('active');
+            event.currentTarget.classList.add('active');
+            
+            if (page === 'stats') renderStats();
+        }
+        
+        function updateStartButton() {
+            const btn = document.getElementById('startWorkoutBtn');
+            const day = WEEK[currentDay];
+            
+            if (day.rest || day.exercises.length === 0) {
+                btn.classList.remove('visible');
+                return;
+            }
+            
+            btn.classList.add('visible');
+            btn.textContent = workoutActive ? '⏸️ NASTAVI TRENING' : '▶️ ZAPOČNI TRENING';
+        }
+        
+        function startWorkout() {
+            workoutActive = true;
+            updateStartButton();
+            // Scroll to current exercise
+            document.getElementById('currentCard').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // ========== START ==========
+        init();
     </script>
 </body>
 </html>
